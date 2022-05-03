@@ -1,0 +1,85 @@
+{
+	"name": "latex-acronyms",
+	"displayName": "LaTeX Acronyms",
+	"description": "Intellisense for Acronyms from your LaTeX Files.",
+	"version": "1.0.0",
+	"publisher": "maltehei",
+	"repository": "https://github.com/MalteHei/latex-acronyms",
+	"bugs": "https://github.com/MalteHei/latex-acronyms/issues",
+	"main": "./out/extension.js",
+	"engines": {
+		"vscode": "^1.66.0"
+	},
+	"categories": [
+		"Language Packs",
+		"Education"
+	],
+	"keywords": [
+		"latex",
+		"acronyms",
+		"glossary",
+		"intellisense",
+		"code completion"
+	],
+	"activationEvents": [
+		"onStartupFinished"
+	],
+	"contributes": {
+		"commands": [
+			{
+				"command": "latex-acronyms.readAcronyms",
+				"title": "LaTeX-Acronyms: Read Acronyms from .tex-Files"
+			}
+		],
+		"configuration": {
+			"title": "LaTeX Acronyms",
+			"properties": {
+				"latex-acronyms.customPatterns": {
+					"markdownDescription": "Specify your own regular expressions for commands that should have Acronym-Intellisense. \n\nExample: \n```json \n[ \"myAcrCmd\" ] \n``` \nThis will enable Intellisense for the command `\\myAcrCmd{}`.",
+					"type": "array",
+					"default": [],
+					"items": {
+						"type": "string",
+						"pattern": "^.*[^{]$"
+					}
+				}
+			}
+		},
+		"languages": [
+			{
+				"id": "latex",
+				"aliases": [
+					"LaTeX",
+					"TeX"
+				],
+				"extensions": [
+					".tex"
+				]
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile && npm run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runTest.js",
+		"publish:major": "vsce publish major",
+		"publish:minor": "vsce publish minor",
+		"publish:patch": "vsce publish patch"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.66.0",
+		"@types/glob": "^7.2.0",
+		"@types/mocha": "^9.1.1",
+		"@types/node": "14.x",
+		"@typescript-eslint/eslint-plugin": "^5.21.0",
+		"@typescript-eslint/parser": "^5.21.0",
+		"eslint": "^8.14.0",
+		"glob": "^8.0.1",
+		"mocha": "^9.2.2",
+		"typescript": "^4.6.4",
+		"@vscode/test-electron": "^2.1.3"
+	}
+}
