@@ -2,9 +2,11 @@
 
 ## Features
 
-Type an acronym-command like `\acrshort{` for a list of acronyms from your *.tex files that reside in your workspace.
-
-To force a reload of the acronyms, open the command palette, type `LaTeX-Acronyms:` and execute the action.
+- Type an acronym-command, like `\acrshort{`, for a list of acronyms from `*.tex` files that reside in your workspace.
+- Supported commands can be found here:
+  - <https://de.overleaf.com/learn/latex/Glossaries>
+- Define custom commands to trigger Intellisense via setting `latex-acronyms.customPatterns`
+- Manually update keys via command called `LaTeX-Acronyms: Update Acronyms` (`latex-acronyms.updateAcronyms`)
 
 ## Known Issues
 
