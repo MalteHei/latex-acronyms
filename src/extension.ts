@@ -4,12 +4,14 @@ import { FileReader } from './file-reader';
 import { Intellisense } from './intellisense';
 import { Logger } from './logger';
 import { TriggerPatterns } from './trigger-patterns';
+import * as packageJSN from '../package.json';
 
 /**
  * The key for accessing acronyms in
  * {@link vscode.ExtensionContext.workspaceState}.
  */
 export const ACRONYMS_KEY = 'ACRONYMS';
+export const EXTENSION_NAME = packageJSN.name;
 
 
 function init(ctx: vscode.ExtensionContext): void {
@@ -19,7 +21,7 @@ function init(ctx: vscode.ExtensionContext): void {
 
 export function activate(context: vscode.ExtensionContext) {
 	Logger.DEBUG = false;
-	Logger.debug(`Activating "latex-acronyms"`);
+	Logger.debug(`Activating "${EXTENSION_NAME}"`);
 	const disposables: vscode.Disposable[] = [];
 
 	init(context);

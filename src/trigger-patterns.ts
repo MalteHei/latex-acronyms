@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { EXTENSION_NAME } from './extension';
 
 
 export class TriggerPatterns {
@@ -32,7 +33,7 @@ export class TriggerPatterns {
 	}
 
 	private static readCustomPatternsFromConfig(): RegExp[] {
-		const conf = vscode.workspace.getConfiguration('latex-acronyms');
+		const conf = vscode.workspace.getConfiguration(EXTENSION_NAME);
 		const patterns: string[] = conf.get('customPatterns') || [];
 
 		return patterns.map(p => `\\\\${p}{`).map(p => new RegExp(p, 'i'));

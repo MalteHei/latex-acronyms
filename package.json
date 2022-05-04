@@ -27,8 +27,9 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "latex-acronyms.readAcronyms",
-				"title": "LaTeX-Acronyms: Read Acronyms from .tex-Files"
+				"command": "latex-acronyms.updateAcronyms",
+				"title": "LaTeX-Acronyms: Update Acronyms",
+				"shortTitle": "Update Acronyms"
 			}
 		],
 		"configuration": {

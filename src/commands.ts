@@ -1,8 +1,10 @@
 import * as vscode from "vscode";
 import { FileReader } from "./file-reader";
+import * as packageJSN from '../package.json';
 
 
 export class Commands {
+	private static readonly COMMANDS = packageJSN.contributes.commands;
 
 	/**
 	 * Register commands for this extension in vscode.
@@ -11,9 +13,10 @@ export class Commands {
 		const disposables: vscode.Disposable[] = [];
 
 		// command to invoke updating acronyms
-		disposables.push(vscode.commands.registerTextEditorCommand('latex-acronyms.readAcronyms', () => {
-			FileReader.updateAndGetAcronyms(ctx, { manual: true });
-		}));
+		disposables.push(vscode.commands.registerTextEditorCommand(
+			this.COMMANDS.find(c => c.shortTitle.startsWith('Update'))?.command as string,
+			() => FileReader.updateAndGetAcronyms(ctx, { manual: true })
+		));
 
 		return disposables;
 	}
