@@ -35,6 +35,11 @@
 		"configuration": {
 			"title": "LaTeX Acronyms",
 			"properties": {
+				"latex-acronyms.debug": {
+					"markdownDescription": "Enable debug output",
+					"type": "boolean",
+					"default": false
+				},
 				"latex-acronyms.customPatterns": {
 					"markdownDescription": "Specify your own regular expressions for commands that should have Acronym-Intellisense. \n\nExample: \n```json \n[ \"myAcrCmd\" ] \n``` \nThis will enable Intellisense for the command `\\myAcrCmd{}`.",
 					"type": "array",
