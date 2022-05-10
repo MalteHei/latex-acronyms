@@ -2,7 +2,7 @@
 	"name": "latex-acronyms",
 	"displayName": "LaTeX Acronyms",
 	"description": "Intellisense for Acronyms from your LaTeX Files.",
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"publisher": "maltehei",
 	"repository": "https://github.com/MalteHei/latex-acronyms",
 	"bugs": "https://github.com/MalteHei/latex-acronyms/issues",
