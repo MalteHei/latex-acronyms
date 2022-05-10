@@ -5,6 +5,11 @@ import { Logger } from './logger';
 
 export const texFileGlob = '**/*.tex';
 
+export interface Result {
+	label: string;
+	term: string;
+}
+
 
 export class FileReader {
 
@@ -13,9 +18,12 @@ export class FileReader {
 	 * to {@link vscode.ExtensionContext.workspaceState}.
 	 * @returns an array containing all acronyms
 	 */
-	public static updateAndGetAcronyms(ctx: vscode.ExtensionContext, options?: { manual?: boolean; }): string[] {
-		const acronymDeclarationPattern = /\\(?<type>newglossaryentry|newacronym){(?<acronym>[^}]+)}/gm;
-		let acronyms: string[] = [];
+	public static updateAndGetAcronyms(ctx: vscode.ExtensionContext, options?: { manual?: boolean; }): Result[] {
+		const patterns: RegExp[] = [
+			/\\(?<type>newacronym){(?<label>.+)}{(?<acronym>.+){(?<term>.+)}/igm,
+			/\\(?<type>newglossaryentry){(?<label>.+)}{.*(name={(?<term>[^}]+)}).*}/igm,
+		];
+		let results: Result[] = [];
 
 		// iterate over tex-files
 		vscode.workspace.findFiles(texFileGlob).then(uris => {
@@ -24,28 +32,31 @@ export class FileReader {
 
 			uris.forEach(uri => {
 				const fileName = uri.path.replace(/.*\//, '');
-				let acronymsInFile = 0;
+				Logger.debug(`reading ${fileName}...`);
 
-				// read file contents
 				const data = readFileSync(uri.fsPath, 'utf-8');
-				let match = acronymDeclarationPattern.exec(data);
-				do {	// iterate over matches
-					if (match?.groups?.acronym) {
-						acronymsInFile++;
-						const existingAcronyms = ctx.workspaceState.get<string[]>(ACRONYMS_KEY) || [];
-						ctx.workspaceState.update(ACRONYMS_KEY, existingAcronyms.concat(match.groups.acronym));
-					}
-				} while ((match = acronymDeclarationPattern.exec(data)) !== null);
-				Logger.debug(`found ${acronymsInFile} acronyms in ${fileName}`);
+				let resultsInFile = 0;
+
+				patterns.forEach(pattern => {
+					let match = pattern.exec(data);
+					do {	// iterate over matches
+						if (match?.groups?.label) {
+							resultsInFile++;
+							const existingAcronyms = ctx.workspaceState.get<typeof results>(ACRONYMS_KEY) || [];
+							ctx.workspaceState.update(ACRONYMS_KEY, existingAcronyms.concat({ label: match.groups.label, term: match.groups.term }));
+						}
+					} while ((match = pattern.exec(data)) !== null);
+				});
+				Logger.debug(`found ${resultsInFile} results in ${fileName}`);
 			});
 
-			acronyms = ctx.workspaceState.get<string[]>(ACRONYMS_KEY) || [];
-			Logger.debug(`done reading files!`, `Found ${acronyms?.length} acronyms across ${uris.length} filess`);
+			results = ctx.workspaceState.get<typeof results>(ACRONYMS_KEY) || [];
+			Logger.debug(`done reading files!`, `Found ${results.length} acronyms across ${uris.length} filess`);
 			if (options?.manual) {
-				vscode.window.showInformationMessage(`Finished updating acronyms! Found ${acronyms?.length} acronym(s) across ${uris.length} files(s)`);
+				vscode.window.showInformationMessage(`Finished updating acronyms! Found ${results?.length} acronym(s) across ${uris.length} files(s)`);
 			}
 		});
-		return acronyms || [];
+		return results || [];
 	}
 
 	/**

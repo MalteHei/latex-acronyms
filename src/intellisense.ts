@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { ACRONYMS_KEY } from './extension';
-import { FileReader } from './file-reader';
+import { FileReader, Result } from './file-reader';
 import { Logger } from './logger';
 import { TriggerPatterns } from "./trigger-patterns";
 
@@ -56,9 +56,9 @@ export class Intellisense {
 					return null;
 				}
 
-				const acronyms = ctx.workspaceState.get<string[]>(ACRONYMS_KEY) || FileReader.updateAndGetAcronyms(ctx);
+				const acronyms: Result[] = ctx.workspaceState.get<Result[]>(ACRONYMS_KEY) || FileReader.updateAndGetAcronyms(ctx);
 				Logger.debug(`acronyms:`, acronyms);
-				return acronyms.map(acronym => new vscode.CompletionItem(acronym, vscode.CompletionItemKind.Value));
+				return acronyms.map(acronym => new vscode.CompletionItem({ label: acronym.label, description: acronym.term }, vscode.CompletionItemKind.Value));
 			}
 		};
 	}
