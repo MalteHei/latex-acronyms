@@ -19,9 +19,9 @@ export class FileReader {
 	 * @returns an array containing all acronyms
 	 */
 	public static updateAndGetAcronyms(ctx: vscode.ExtensionContext, options?: { manual?: boolean; }): Result[] {
-		const patterns: RegExp[] = [
-			/\\(?<type>newacronym){(?<label>.+)}{(?<acronym>.+){(?<term>.+)}/igm,
-			/\\(?<type>newglossaryentry){(?<label>.+)}{.*(name={(?<term>[^}]+)}).*}/igm,
+		const definitionPatterns: RegExp[] = [
+			/\\(?<type>newacronym)(?<optional>\[.*\])*{(?<label>.+)}{(?<acronym>.+){(?<term>.+)}/igm,
+			/\\(?<type>newglossaryentry)(?<optional>\[.*\])*{(?<label>.+)}{.*(name={(?<term>[^}]+)}).*}/igm,
 		];
 		let results: Result[] = [];
 
@@ -37,7 +37,7 @@ export class FileReader {
 				const data = readFileSync(uri.fsPath, 'utf-8');
 				let resultsInFile = 0;
 
-				patterns.forEach(pattern => {
+				definitionPatterns.forEach(pattern => {
 					let match = pattern.exec(data);
 					do {	// iterate over matches
 						if (match?.groups?.label) {
